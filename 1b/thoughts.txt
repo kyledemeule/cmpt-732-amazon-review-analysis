@@ -1,0 +1,2 @@
+Map: filter out invalid input (e.g. non-en, Main_Page), maps to (date/hour, #views)
+Reduce: compare two view counts, take max
