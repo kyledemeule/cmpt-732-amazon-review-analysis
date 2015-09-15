@@ -1,0 +1,5 @@
+1. Personally I find it weird that that you instantiate a job class and then call a bunch of .setXYZ calls to configure it... coming from a ruby/javascript background I would expect some type of hash configuration, oh well.
+
+2. The reduce step was split up into 3 jobs, and likely run on 3 nodes. If the base set we are working with is larger than what one node can handle, we could split it up over more nodes. Also if we want to process a job quicker and we have a bunch of nodes, we could use multiple reducers to speed up the reduce step (since they'll happen in parrallel).
+
+3. No reduces happened, so we only saw the result of the map stage, i.e. the words in order all with count 1.
