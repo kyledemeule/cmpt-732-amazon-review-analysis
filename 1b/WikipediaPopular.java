@@ -26,12 +26,14 @@ public class WikipediaPopular extends Configured implements Tool {
 
         @Override
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+          // filename is in format "pagecounts-20141204-100000.gz"
           String hour_string = ((FileSplit) context.getInputSplit()).getPath().getName();
+          hour_string = hour_string.substring("pagecounts-".length(), hour_string.length() - "0000.gz".length());
           String[] tokens = value.toString().split("[ ]");
           // a line should have 4 components, if it does not ignore it
           if(tokens.length == 4) {
             String project_name = tokens[0], page_name = tokens[1], view_count = tokens[2], content_size = tokens[3];
-            if (project_name.equals("en")) {
+            if (project_name.equals("en") && !page_name.equals("Main_Page") && !page_name.startsWith("Special:")) {
               context.write(new Text(hour_string), new IntWritable(Integer.parseInt(view_count)));
             }
           }
