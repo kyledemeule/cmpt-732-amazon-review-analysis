@@ -1,2 +1,48 @@
+Part 1:
+
 Map: filter out invalid input (e.g. non-en, Main_Page), maps to (date/hour, #views)
 Reduce: compare two view counts, take max
+
+Part 2:
+
+average score in each subreddit.
+
+Map=
+Subreddit string, (# comments, avg score)
+e.g.
+Django (1, 4)
+Django (1, 2)
+
+Combiner:
+Take 2 for same subreddit, multiply # comments by avg score, sum and divide by total # comments
+e.g.
+Django (a, b)
+Django (c, d)
+->
+Django (a + c, ((a*b + c*d) / (a + c)))
+
+Real example:
+Django (1, 4)
+Django (1, 2)
+->
+Django (2, 3)
+
+
+REAL STUFF
+map= 
+	input: json_string
+	output: <subreddit, (num_comments, sum_score)>
+combine= 
+	input:<subreddit, List[<subreddit, (num_comments, sum_score)>]>
+	output: <subreddit, (num_comments, sum_score)>
+reducer=
+	input: <subreddit, (num_comments, sum_score)>
+	output: <subreddit, average_comment_score>
+
+#COMMANDS
+yarn jar CMPT732/redditaverage.jar RedditAverage -libjars CMPT732/ext/*.jar /courses/cmpt-732/a1-reddit-1 /user/kdd2/output
+yarn jar CMPT732/redditaverage.jar RedditAverage -libjars CMPT732/longpairwritable.jar,CMPT732/ext/jackson-annotations-2.6.0.jar,CMPT732/ext/jackson-core-2.6.0.jar,CMPT732/ext/jackson-databind-2.6.0.jar /courses/cmpt-732/a1-reddit-1 /user/kdd2/output
+
+${JAVA_HOME}/bin/javac -classpath `${HADOOP_HOME}/bin/hadoop classpath` LongPairWritable.java RedditAverage.java
+${JAVA_HOME}/bin/jar cf redditaverage.jar RedditAverage*.class
+scp redditaverage.jar kdd2@hadoop.rcg.sfu.ca:CMPT732/
