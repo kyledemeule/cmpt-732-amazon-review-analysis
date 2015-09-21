@@ -3,6 +3,8 @@ Part 1:
 Map: filter out invalid input (e.g. non-en, Main_Page), maps to (date/hour, #views)
 Reduce: compare two view counts, take max
 
+yarn jar wikipediapopular.jar WikipediaPopular /user/kdd2/wikipedia /user/kdd2/output
+
 Part 2:
 
 average score in each subreddit.
@@ -41,6 +43,7 @@ reducer=
 
 #COMMANDS
 yarn jar CMPT732/redditaverage.jar RedditAverage -libjars CMPT732/ext/*.jar /courses/cmpt-732/a1-reddit-1 /user/kdd2/output
+yarn jar CMPT732/redditaverage.jar RedditAverage -libjars CMPT732/longpairwritable.jar,CMPT732/ext/jackson-annotations-2.6.0.jar,CMPT732/ext/jackson-core-2.6.0.jar,CMPT732/ext/jackson-databind-2.6.0.jar /courses/cmpt-732/a1-reddit-1 /user/kdd2/output
 yarn jar CMPT732/redditaverage.jar RedditAverage -libjars CMPT732/longpairwritable.jar,CMPT732/ext/jackson-annotations-2.6.0.jar,CMPT732/ext/jackson-core-2.6.0.jar,CMPT732/ext/jackson-databind-2.6.0.jar /courses/cmpt-732/a1-reddit-1 /user/kdd2/output
 
 ${JAVA_HOME}/bin/javac -classpath `${HADOOP_HOME}/bin/hadoop classpath` LongPairWritable.java RedditAverage.java
