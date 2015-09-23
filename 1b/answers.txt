@@ -1,0 +1,3 @@
+1. Instead of having a IntWritable value we could define a data structure like LongPairWritable that stores a Text and an Int. The text could store the wikipedia page and the Int stores the view count. We use the Int for all the comparisons, and then in the end output both of them.
+
+2. I had a small difference. When I don't use a combiner the total job took 34 seconds to complete, with a combiner it takes 30 seconds. I ran this in the lab time while all the other students were there, since the difference is so small it's possible that the difference is just because the nodes were more busy when I ran one job.
