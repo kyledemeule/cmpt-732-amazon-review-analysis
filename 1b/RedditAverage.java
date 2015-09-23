@@ -1,12 +1,10 @@
 // adapted from https://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html
 
 import java.io.IOException;
-import java.util.StringTokenizer;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
@@ -21,59 +19,7 @@ import org.apache.hadoop.util.ToolRunner;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-// PAIRSPECIFC
-import java.io.IOException;
-import java.io.DataOutput;
-import java.io.DataInput;
-
-import org.apache.hadoop.io.Writable;
-import org.apache.hadoop.io.LongWritable;
-
 public class RedditAverage extends Configured implements Tool {
-
-  private static class LongPairWritable implements Writable {
-    private long a;
-    private long b;
-    private LongWritable writ = new LongWritable();
-
-    public LongPairWritable(long a, long b) {
-      this.a = a;
-      this.b = b;
-    }
-
-    public LongPairWritable() {
-      this(0, 0);
-    }
-    
-    public long get_0() {
-      return a;
-    }
-    public long get_1() {
-      return b;
-    }
-    public void set(long a, long b) {
-      this.a = a;
-      this.b = b;   
-    }
-
-    public void write(DataOutput out) throws IOException {
-      writ.set(a);
-      writ.write(out);
-      writ.set(b);
-      writ.write(out);
-    }
-    public void readFields(DataInput in) throws IOException {
-      writ.readFields(in);
-      a = writ.get();
-      writ.readFields(in);
-      b = writ.get();
-    }
-    
-    public String toString() {
-      return "(" + Long.toString(a) + "," + Long.toString(b) + ")";
-    }
-
-  }
 
     // Take JSON for comments and map to -> subreddit string, (number of comments, sum score)
     public static class CommentMapper extends Mapper<LongWritable, Text, Text, LongPairWritable>{
@@ -114,7 +60,7 @@ public class RedditAverage extends Configured implements Tool {
             comment_count += val.get_0();
             comment_sum_score += val.get_1();
           }
-          double average = comment_sum_score / comment_count;
+          double average = (double)comment_sum_score / (double)comment_count;
           context.write(key, new DoubleWritable(average));
         }
     }
@@ -130,7 +76,7 @@ public class RedditAverage extends Configured implements Tool {
         Job job = Job.getInstance(conf, "Reddit average");
         job.setJarByClass(RedditAverage.class);
 
-        job.setInputFormatClass(TextInputFormat.class);
+        job.setInputFormatClass(MultiLineJSONInputFormat.class);
 
         job.setMapperClass(CommentMapper.class);
         job.setCombinerClass(SubredditCombiner.class);
