@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.lib.chain.*;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -55,8 +56,8 @@ public class CorrelateLogs extends Configured implements Tool {
         }
     }
     
-    public class NASACalculationMapper extends Mapper<Text, LongPairWritable, Text, Text>{
-        private Long n, Sx, Sy, Sxy;
+    public static class NASACalculationMapper extends Mapper<Text, LongPairWritable, Text, Text>{
+        private Long n, Sx, Sy, Sxy, one;
         private double Sx2, Sy2;
         
         public void setup(Context context) throws java.io.IOException, java.lang.InterruptedException {
@@ -66,17 +67,19 @@ public class CorrelateLogs extends Configured implements Tool {
             Sy = new Long(0);
             Sy2 = 0.0;
             Sxy = new Long(0);
+            one = new Long(1);
         }
       
         public void map(Text key, LongPairWritable value, Context context) throws IOException, InterruptedException {
           Long x = value.get_0();
           Long y = value.get_1();
           
+          n += one;
           Sx += x;
           Sx2 += Math.pow(x, 2);
           Sy += y;
           Sy2 += Math.pow(y, 2);
-          Sxy = x * y;
+          Sxy += x * y;
         }
         
         public void cleanup(Context context) throws java.io.IOException, java.lang.InterruptedException {
@@ -107,20 +110,17 @@ public class CorrelateLogs extends Configured implements Tool {
         TableMapReduceUtil.addDependencyJars(job);
 
         TableMapReduceUtil.initTableMapperJob(args[0], get_scan(), NASAMapper.class, Text.class, LongPairWritable.class, job);
-        
-        //job.setInputFormatClass(TextInputFormat.class);
-        //TextInputFormat.addInputPath(job, new Path(args[0]));
 
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(LongPairWritable.class);
   
-        job.setReducerClass(NASAReducer.class);
+        ChainReducer.setReducer(job, NASAReducer.class, Text.class, LongPairWritable.class, Text.class, LongPairWritable.class, new Configuration(false));
+        ChainReducer.addMapper(job, NASACalculationMapper.class, Text.class, LongPairWritable.class, Text.class, Text.class, new Configuration(false));
         
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(LongPairWritable.class);
+        job.setOutputValueClass(Text.class);
         job.setOutputFormatClass(TextOutputFormat.class);
         TextOutputFormat.setOutputPath(job, new Path(args[1]));
-        
 
         job.setNumReduceTasks(1);
 
