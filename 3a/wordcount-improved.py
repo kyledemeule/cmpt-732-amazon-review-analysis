@@ -15,7 +15,10 @@ words = text.flatMap(lambda line: wordsep.split(line))
 cleaned_words = words.filter(lambda w: w != '').map(lambda w: w.lower()).map(lambda w:unicodedata.normalize("NFD", w))
 word_tuples = cleaned_words.map(lambda w: (w, 1))
  
-wordcount = word_tuples.reduceByKey(operator.add).coalesce(1)
+wordcount = word_tuples.reduceByKey(operator.add).coalesce(1).cache()
  
-outdata = wordcount.sortBy(lambda (w,c): w).map(lambda (w,c): u"%s %i" % (w, c))
-outdata.saveAsTextFile(output)
+outdata_byword = wordcount.sortBy(lambda (w,c): w).map(lambda (w,c): u"%s %i" % (w, c))
+outdata_byword.saveAsTextFile(output + "/by-word")
+
+outdata_byfreq = wordcount.sortBy(lambda (w,c): (c, w), ascending = False).map(lambda (w,c): u"%s %i" % (w, c))
+outdata_byfreq.saveAsTextFile(output + "/by-freq")
