@@ -1,0 +1,2 @@
+1. When the data set you want to join is tiny and frequently re-used, like in this assignment.
+2. If the broadcast is large and contains information that is not needed by all the different executors it couldn't potentially be slower than joining the exact information each node needs.
