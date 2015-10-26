@@ -1,5 +1,6 @@
 from pyspark import SparkConf, SparkContext
 from pyspark.sql import SQLContext
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType
 import sys, operator, json
 
 def main():
@@ -10,7 +11,12 @@ def main():
     sc = SparkContext(conf=conf)
     sqlContext = SQLContext(sc)
 
-    comments = sqlContext.read.json(inputs)
+    schema = StructType([
+        StructField('subreddit', StringType(), False),
+        StructField('score', IntegerType(), False),
+    ])
+
+    comments = sqlContext.read.schema(schema).json(inputs)
     averages = comments.select('subreddit', 'score').groupby('subreddit').avg()
 
     averages.coalesce(1).write.save(output, format='json', mode='overwrite')
