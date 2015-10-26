@@ -1,0 +1,10 @@
+
+
+
+
+
+4.
+
+df = sqlContext.read.parquet("output/")
+df.groupBy().sum("_4").collect()
+> [Row(sum(_4)=36133736.0)]
