@@ -1,7 +1,22 @@
+1.
 
+Non-pypy:
+reddit-averages: 8min, 25sec
+reddit-averages-sql noschema: 1min, 18sec
+reddit-averages-sql: 1min, 1sec
 
+pypy:
+reddit-averages: 3mins, 28sec
+reddit-averages-sql noschema: 1mins, 25sec
+reddit-averages-sql: 45sec
 
+2.
 
+sparkSQL is faster than just using python. pypy improves a python implementation, but has little effect on sparkSQL implementation.
+
+3.
+
+PyPy made a huge difference in reddit-averages, not so much when using sparkSQL. in reddit-averages a lot of work is being done by python, so a faster python implementation would improve performance. With the sparkSQL version a lot of the work is actually being done by scala, so the python implementation has little effect.
 
 4.
 
