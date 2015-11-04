@@ -10,7 +10,7 @@ def weather_schema():
         StructField("observation", StringType(), True),
         StructField("value", IntegerType(), True),
         StructField("other1", StringType(), True),
-        StructField("other2", StringType(), True),
+        StructField("QFLAG", StringType(), True),
         StructField("other3", StringType(), True),
         StructField("other4", StringType(), True)
     ])
@@ -23,7 +23,7 @@ def main():
     sc = SparkContext(conf=conf)
     sqlContext = SQLContext(sc)
 
-    raw_temperature_data = sqlContext.read.format('com.databricks.spark.csv').load(inputs, schema=weather_schema()).cache()
+    raw_temperature_data = sqlContext.read.format('com.databricks.spark.csv').load(inputs, schema=weather_schema()).where("QFLAG = ''").cache()
     temp_min = raw_temperature_data.where("observation = 'TMIN'").withColumnRenamed('value', 'min_value')
     temp_max = raw_temperature_data.where("observation = 'TMAX'").withColumnRenamed('value', 'max_value')
 
@@ -31,9 +31,9 @@ def main():
     ranged_dates = joined_stations.select(joined_stations.station, joined_stations.date, joined_stations.range).cache()
     
     maxes = ranged_dates.groupBy("date").max("range")
-    max_stations = ranged_dates.join(maxes, maxes['max(range)'] == ranged_dates.range).select(ranged_dates.station, ranged_dates.date, ranged_dates.range)
+    max_stations = ranged_dates.join(maxes, [maxes['max(range)'] == ranged_dates.range, maxes.date == ranged_dates.date]).select(ranged_dates.station, ranged_dates.date, ranged_dates.range).distinct().sort(ranged_dates.date.asc())
 
-    max_stations.write.mode('overwrite').format('json').save(output)
+    max_stations.rdd.repartition(1).map(lambda (station,date,rrange): u"%s %s %i" % (date, station, rrange)).saveAsTextFile(output)
 
 if __name__ == "__main__":
     main()
