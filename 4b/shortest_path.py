@@ -49,16 +49,19 @@ def main():
             paths.cache()
             break
 
-    final_path = [target_node[0]]
-    current_node = target_node[0]
-    current_path = target_node[1]
-    while current_node != source_node:
-        next_node = paths.filter(lambda (node, path): node == current_path[0]).first()
-        final_path.insert(0, next_node[0])
-        current_node = next_node[0]
-        current_path = next_node[1]
+    if target_node:
+        final_path = [target_node[0]]
+        current_node = target_node[0]
+        current_path = target_node[1]
+        while current_node != source_node:
+            next_node = paths.filter(lambda (node, path): node == current_path[0]).first()
+            final_path.insert(0, next_node[0])
+            current_node = next_node[0]
+            current_path = next_node[1]
 
-    sc.parallelize(final_path).coalesce(1).saveAsTextFile(output + '/path')
+        sc.parallelize(final_path).coalesce(1).saveAsTextFile(output + '/path')
+    else:
+        sc.parallelize(["There was no path within the constraints"]).coalesce(1).saveAsTextFile(output + '/path')
 
 if __name__ == "__main__":
     main()
