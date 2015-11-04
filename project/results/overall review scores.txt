@@ -1,0 +1,13 @@
+Number of reviews at each score. Executed on entire dataset on my laptop, took about ~30 minutes (most time was unzipping).
+
+(1.0, 6757694)
+(2.0, 4286384)
+(3.0, 7073655)
+(4.0, 15509942)
+(5.0, 49208827)
+
+import numpy
+a = [1, 2, 3, 4, 5]
+b = [6757694, 4286384, 7073655, 15509942, 49208827]
+float(numpy.dot(a, b)) / float(sum(b))
+4.160428333876291
