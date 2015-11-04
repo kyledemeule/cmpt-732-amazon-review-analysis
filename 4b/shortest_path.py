@@ -38,20 +38,27 @@ def main():
     graph_info = sc.textFile(node_file).map(process_raw_graph_line).cache()
     paths = sc.parallelize([(source_node, (None, 0))])
 
-    #for i in range(6):
-    #    joined = paths.leftOuterJoin(graph_info)
-    #    paths = joined.flatMap()
-    #    paths.saveAsTextFile(output + '/iter-' + str(i))
-    #    if we_seem_to_be_done:
-    #        break
-    # 
-    #finalpath = ...
-    #finalpath.saveAsTextFile(output + '/path')
+    for i in range(6):
+        joined = paths.join(graph_info)
+        iteration = paths.union(joined.flatMap(lambda (node, (path, reachable_nodes)): make_nodes(node, path, reachable_nodes)))
+        paths = iteration.reduceByKey(reduce_paths)
+        paths.saveAsTextFile(output + '/iter-' + str(i))
+        # get the first element that passes this filter, or returns None
+        target_node = (paths.filter(lambda (node, path): node == destination_node).take(1) or [None])[0]
+        if target_node:
+            paths.cache()
+            break
 
-    joined = paths.join(graph_info)
-    one_iteration = paths.union(joined.flatMap(lambda (node, (path, reachable_nodes)): make_nodes(node, path, reachable_nodes)))
-    reduced_iteration = one_iteration.reduceByKey(reduce_paths)
-    reduced_iteration.coalesce(1).saveAsTextFile(output)
+    final_path = [target_node[0]]
+    current_node = target_node[0]
+    current_path = target_node[1]
+    while current_node != source_node:
+        next_node = paths.filter(lambda (node, path): node == current_path[0]).first()
+        final_path.insert(0, next_node[0])
+        current_node = next_node[0]
+        current_path = next_node[1]
+
+    sc.parallelize(final_path).coalesce(1).saveAsTextFile(output + '/path')
 
 if __name__ == "__main__":
     main()
