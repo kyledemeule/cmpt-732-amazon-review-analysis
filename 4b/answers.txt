@@ -1,0 +1,11 @@
+1. For this problem I actually found the SQL version easier to write and read (other than having to name the temp tables after each query). SQL is just a very common and unambigious way of querying data. Also there is an expected ordering to each SQL query, and they are very consistent.
+
+2. For this problem I think the SQL version is more readable. However I can think imagine cases where the Dataframe approach would be easier to read and write.
+
+3. There was a slight improvement from 1 second to 5 seconds, and almost no improvement from 5 seconds to 10 seconds. The ratio of batch length to average job length:
+
+1: 5x
+5: 3.6x
+10: 3.5x
+
+My program could not handle the max stream, the delay just kept adding up. It could handle the one below max stream though.
