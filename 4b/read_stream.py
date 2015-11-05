@@ -11,16 +11,13 @@ def add_tuples(a, b):
     return tuple(sum(p) for p in zip(a,b))
 
 def process_rdd(sc, rdd, output):
-    values = rdd.map(parse_line).cache()
-    x_sum, y_sum, x2_sum, y2_sum, xy_sum, n = values.reduce(add_tuples)
+    x_sum, y_sum, x2_sum, y2_sum, xy_sum, n = rdd.map(parse_line).reduce(add_tuples)
 
     x_mean = x_sum / n
     y_mean = y_sum / n
 
-    x_temp, y_temp = values.map(lambda (x, y, x2, y2, xy, n): ((x - x_mean)**2, (y - y_mean)**2)).reduce(add_tuples)
-
-    x_stdev = math.sqrt(x_temp / n)
-    y_stdev = math.sqrt(y_temp / n)
+    x_stdev = math.sqrt((x2_sum / n) - (x_mean**2))
+    y_stdev = math.sqrt((y2_sum / n) - (y_mean**2))
 
     correlation_coefficiant = (n * xy_sum - x_sum * y_sum) / (math.sqrt(n * x2_sum - (x_sum**2)) * math.sqrt(n * y2_sum - (y_sum**2)))
 
