@@ -13,19 +13,14 @@ def add_tuples(a, b):
 def process_rdd(sc, rdd, output):
     values = rdd.map(parse_line).cache()
     x_sum, y_sum, x2_sum, y2_sum, xy_sum, n = values.reduce(add_tuples)
-    
-    x_mean = x_sum / n
-    y_mean = y_sum / n
-    xy_mean = xy_sum / n
-    x2_mean = x2_sum / n
-    y2_mean = y2_sum / n
 
-    #correlation_coefficiant = (xy_mean - x_mean * y_mean) / math.sqrt((x2_mean - x_mean**2) * (y2_mean - y_mean**2))
+    x_stats = values.map(lambda t: t[0]).stats()
+    x_mean, x_stdev = x_stats.mean(), x_stats.stdev()
+
+    y_stats = values.map(lambda t: t[1]).stats()
+    y_mean, y_stdev = y_stats.mean(), y_stats.stdev()
+
     correlation_coefficiant = (n * xy_sum - x_sum * y_sum) / (math.sqrt(n * x2_sum - (x_sum**2)) * math.sqrt(n * y2_sum - (y_sum**2)))
-    # calculate two standard deviations for the price of one
-    x_stdev = values.map(lambda t: t[0]).stdev()
-    y_stdev = values.map(lambda t: t[1]).stdev()
-    #x_stdev, y_stdev = map(math.sqrt, values.map(lambda (x, y, x2, y2, xy, n): ((x - x_mean)**2, (y - y_mean)**2)).reduce(add_tuples))
 
     m = correlation_coefficiant * (y_stdev / x_stdev)
     b = y_mean - m * x_mean
