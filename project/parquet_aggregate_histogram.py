@@ -1,26 +1,24 @@
 from pyspark import SparkConf, SparkContext
 from pyspark.sql import SQLContext
-import sys, operator
+import sys, operator, time, datetime
 
-buckets = [0, 0.24, 0.74, 1.24, 1.74, 2.24, 2.74, 3.24, 3.74, 4.24, 4.74, 5.01]
-num_buckets = len(buckets)
-
-def find_bucket(a):
-    for index in xrange(0, num_buckets):
-        if a < buckets[index]:
-            return buckets[index - 1]
+import plotly.plotly as py
+from plotly.graph_objs import *
+import pandas as pd
 
 def main():
     inputs = sys.argv[1]
-    output = sys.argv[2]
      
     conf = SparkConf().setAppName('Amazon Histogram Parquet')
     sc = SparkContext(conf=conf)
     sqlContext = SQLContext(sc)
 
     df = sqlContext.read.parquet(inputs)
-    result = df.groupBy("asin").avg("overall").map(lambda a: (find_bucket(a[1]), 1)).reduceByKey(operator.add)
-    result.coalesce(1).sortByKey().saveAsTextFile(output)
+    result = df.groupBy("asin").avg("overall")
+
+    data = Data([Histogram(x=result.toPandas()['avg(overall)'])])
+    filename= "spark/histogram-" + datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d-%H:%M:%S')
+    py.iplot(data, filename=filename)
 
 if __name__ == "__main__":
     main()
