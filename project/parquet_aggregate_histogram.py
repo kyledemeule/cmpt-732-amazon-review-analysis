@@ -16,12 +16,14 @@ def main():
     sc = SparkContext(conf=conf)
     sqlContext = SQLContext(sc)
 
-    df = sqlContext.read.parquet(inputs)
-    result = df.groupBy("asin").avg("overall").select("asin", "avg(overall)").map(lambda a: u"%s, %f" % (a[0], a[1]))
-    result.repartition(1).saveAsTextFile(output)
+    sqlContext.read.parquet(inputs).registerTempTable('amazon_reviews')
 
-    #pyplot.hist(result.collect())
-    #pyplot.savefig('histogram.png')
+    result = sqlContext.sql("""
+        SELECT asin, AVG(overall) AS overall, count(*) AS ccount 
+        FROM amazon_reviews 
+        GROUP BY asin""")
+
+    result.rdd.map(lambda a: u"%s, %f, %i" % (a.asin, a.overall, a.ccount)).repartition(1).saveAsTextFile(output)
 
 
 if __name__ == "__main__":
