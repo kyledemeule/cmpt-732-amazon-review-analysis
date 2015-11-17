@@ -1,6 +1,8 @@
 from pyspark import SparkConf, SparkContext
 import sys, random
 
+ITER_PARTITION = 100
+
 def generate_counts(iterations):
     rand = random.Random()
 
@@ -18,19 +20,16 @@ def combine(a, b):
     return (a[0]+b[0], a[1]+b[1])
 
 def main():
-    iterations = int(sys.argv[1])
+    iterations = int(sys.argv[1]) / ITER_PARTITION
+    output = sys.argv[2]
 
     conf = SparkConf().setAppName('Euler Estimator')
     sc = SparkContext(conf=conf)
 
-    euler_count, euler_iterations = sc.parallelize([iterations] * 100).map(generate_counts).reduce(combine)
+    euler_count, euler_iterations = sc.parallelize([iterations] * ITER_PARTITION).map(generate_counts).reduce(combine)
     euler_estimate = float(euler_count) / float(euler_iterations)
 
-    print("\n")
-    print(u"Euler Count: %i" % (euler_count))
-    print(u"Euler Iterations: %i" % (euler_iterations))
-    print(u"Euler Estimate: %f" % (euler_estimate))
-    print("\n")
+    sc.parallelize([(euler_count, euler_iterations, euler_estimate)]).coalesce(1).saveAsTextFile(output)
 
 if __name__ == "__main__":
     main()
