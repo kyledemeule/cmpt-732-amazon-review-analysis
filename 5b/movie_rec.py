@@ -40,8 +40,6 @@ def main():
     tdir = sys.argv[1]
     users_ratings = sys.argv[2]
     output = sys.argv[3]
-    rank = int(sys.argv[4])
-    iterations = int(sys.argv[5])
 
     conf = SparkConf().setAppName('Move Recommender')
     sc = SparkContext(conf=conf)
@@ -55,7 +53,7 @@ def main():
     written_actual_cartesian = user_written_movies.cartesian(movies).map(lambda t: sum(t, ())) # sum flattens
     written_movie_pairs = sqlContext.createDataFrame(written_actual_cartesian, ['written', 'rating', 'm_id', 'm_name', 'm_genre'])
     # calculate levensthein distance for each pair, and the minimum distance
-    leve_distance = written_movie_pairs.withColumn("distance", levenshtein('written', 'm_name'))
+    leve_distance = written_movie_pairs.withColumn("distance", levenshtein('written', 'm_name')).cache()
     min_per_written = leve_distance.groupBy('written').min('distance')
     # based on the min distance find the actual movies
     join_conditions = [leve_distance.written == min_per_written.written, leve_distance.distance == min_per_written['min(distance)']]
@@ -71,7 +69,7 @@ def main():
 
     # Explicit vs Implicit model, which is it really? Implicit works much better
     #model = ALS.train(ratings, rank, iterations)
-    model = ALS.trainImplicit(ratings, rank, iterations, alpha=1.0)
+    model = ALS.trainImplicit(ratings, rank=20, iterations=10, alpha=1.0)
 
     # get the ratings for every movie for our user
     unlabeled_movies = movies.map(lambda (m_id, name, genre): (unique_user_id, m_id))
