@@ -7,7 +7,8 @@ import sys, os
 RECOMMEND_NUM = 10
 
 def datfile(tdir, file):
-    return tdir + file + ".dat"
+    slash_char = "/" if tdir[-1:] != "/" else ""
+    return tdir + slash_char + file + ".dat"
 
 def extract_rating(line):
     user_id, movie_id, rating, timestamp = line.split("::")
@@ -25,7 +26,7 @@ def extract_user_rating(line):
 
 def format_result(seen_movies, top_rec):
     outlines = []
-    outlines.append("Hi! Here are my top {} recommendations for you:".format(RECOMMEND_NUM))
+    outlines.append("Hi! Here are my top %s recommendations for you:" % (RECOMMEND_NUM))
     printed = 0
     for (movie_id, movie_name) in top_rec:
         if movie_id not in seen_movies:
@@ -52,6 +53,7 @@ def main():
     # cartesian the user provided movie names with all movies
     written_actual_cartesian = user_written_movies.cartesian(movies).map(lambda t: sum(t, ())) # sum flattens
     written_movie_pairs = sqlContext.createDataFrame(written_actual_cartesian, ['written', 'rating', 'm_id', 'm_name', 'm_genre'])
+
     # calculate levensthein distance for each pair, and the minimum distance
     leve_distance = written_movie_pairs.withColumn("distance", levenshtein('written', 'm_name')).cache()
     min_per_written = leve_distance.groupBy('written').min('distance')
@@ -67,7 +69,7 @@ def main():
     # adding the user ratings to the corpus, so the model can understand how this person thinks
     ratings = sc.textFile(datfile(tdir, "ratings")).map(extract_rating).union(sc.parallelize(user_ratings))
 
-    # Explicit vs Implicit model, which is it really? Implicit works much better
+    # Explicit vs Implicit model, I think this data is explicit, but the implicit model provides *much* better results. Actual movies that are related to the user input
     #model = ALS.train(ratings, rank, iterations)
     model = ALS.trainImplicit(ratings, rank=20, iterations=10, alpha=1.0)
 
