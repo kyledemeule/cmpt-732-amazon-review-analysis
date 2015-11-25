@@ -9,3 +9,5 @@
 10: 3.5x
 
 My program could not handle the max stream, the delay just kept adding up. It could handle the one below max stream though.
+
+If I increase the executors to 5, and cores for each to 2, and set the batch size to 10 seconds, my average process time is ~9.5seconds, and I am able to handle the stream.
