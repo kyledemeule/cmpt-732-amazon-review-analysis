@@ -24,14 +24,22 @@ EXAMPLE_ITEM = {
 
 class AmazonItemSpider(scrapy.Spider):
     name = 'amazon'
+    DOWNLOAD_DELAY = 1
 
     def start_requests(self):
-        asins = ["B00HN2C196", "B00405XZ3K"]
+        asins = self.get_asins()
         for asin in asins:
             url = BASE_URL + asin
             request = scrapy.Request(url, callback=self.parse_page)
             request.meta["asin"] = asin
             yield request
+
+    def get_asins(self):
+        asins = []
+        with open("sample") as input_file:
+            for asin in input_file:
+                 asins.append(asin)
+        return asins
 
     def parse_page(self, response):
         result = {}
@@ -41,13 +49,14 @@ class AmazonItemSpider(scrapy.Spider):
         return result
 
     def parse_total_reviews(self, response):
-        total = {}
+        total = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
         total_count = int(response.css("a.a-link-normal.a-text-normal.product-reviews-link::text").extract()[1].strip().replace(",", ""))
 
         for i in range(5):
             text = response.css("table#histogramTable tr.a-histogram-row")[i].css("td.a-nowrap a::attr(title)").extract_first()
-            score, count = self.extract_scorecount(text, total_count)
-            total[score] = count
+            if text:
+                score, count = self.extract_scorecount(text, total_count)
+                total[score] = count
 
         return total
 
@@ -59,4 +68,9 @@ class AmazonItemSpider(scrapy.Spider):
         return score, round(count, 0)
 
     def parse_helpful_reviews(self, response):
-        return {}
+        helpful_counts = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
+        strings = response.css("div#revMHRL div.a-section div.a-icon-row a.a-link-normal::attr(title)").extract()
+        scores = map(lambda x: int(x[0]), strings)
+        for score in scores:
+            helpful_counts[score] += 1
+        return helpful_counts
