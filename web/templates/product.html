@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h2>Product</h2>
+    <dl>
+        <dt>Info</dt>
+    </dl>
+    <div>Amazon Histogram</div>
+    <div>A-Score Histogram</div>
+    </h3>Top Reviews</h3>
+    <ul class=reviews>
+        {% for review in reviews %}
+            review
+        {% endfor %}
+    </ul>
+{% endblock %}

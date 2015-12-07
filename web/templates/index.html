@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block body %}
+    <form action="{{ url_for('search') }}" method=get class=add-entry>
+      <dl>
+        <dt>ASIN:
+            <input type="hidden" name="search_type" value="product">
+            <dd><input type=text size=30 name="search_term"></dd>
+            <dd><input type=submit></dd>
+        </dt>
+      </dl>
+    </form>
+    <h2>Top Reviewers</h2>
+    <ul class=reviews>
+        {% for reviewer in top_reviewers %}
+            <a href="">title</a>
+        {% endfor %}
+    </ul>
+    <h2>Top Products</h2>
+    <table class=products>
+        {% for product in top_products %}
+            <tr>
+                <td><a href=""></a></td>
+                <td>Score</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
