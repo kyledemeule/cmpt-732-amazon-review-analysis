@@ -1,7 +1,7 @@
 from pyspark import SparkConf, SparkContext
 from pyspark.sql import SQLContext
 import sys
-from balance_rating import calculate_ascore
+from balance_rating_normal import calculate_ascore
 
 #000014357X, 5.000000, 2
 #{
@@ -72,7 +72,7 @@ def main():
     #(u'B0012TDNAM', {1: 0, 2: 0, 3: 0, 4: 0, 5: 1}, {1: 0, 2: 0, 3: 0, 4: 0, 5: 6})
     reviews_with_counts = countable_reviews.reduceByKey(lambda a, b: (combine_counts(a[0], b[0]), combine_counts(a[1], b[1])))
     # (u'B007R6AEBK', ({1: 0, 2: 0, 3: 0, 4: 0, 5: 1}, {1: 0, 2: 0, 3: 0, 4: 0, 5: 17}))
-    product_averages = reviews_with_counts.map(lambda (id, (normal, weighted)): (id, get_average(normal), get_average(weighted)))
+    product_averages = reviews_with_counts.map(lambda (id, (normal, weighted)): (id, get_average(normal), get_average(weighted), normal, weighted, sum(normal.values())))
     
     # save product with normal and weighted review scores
     product_averages.repartition(1).saveAsTextFile(output + "averages/")
