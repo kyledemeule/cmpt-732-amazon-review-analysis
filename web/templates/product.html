@@ -14,7 +14,8 @@
     </h3>Top Reviews</h3>
     <ul class=reviews>
         {% for review in reviews %}
-            review
+            <dt><a href="{{ url_for('review', reviewer_id=review.reviewerid, asin=review.asin) }}">{{ review.summary }}</a></dt>
+            <dd>{{ review.reviewtext }}</dd>
         {% endfor %}
     </ul>
 {% endblock %}

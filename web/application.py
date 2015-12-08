@@ -12,8 +12,8 @@ def index():
 
 @app.route("/search")
 def search():
-    search_type = request.args.get('search_type')
-    search_term = request.args.get('search_term')
+    search_type = request.args.get('search_type').strip()
+    search_term = request.args.get('search_term').strip()
     if search_type == "product":
         return redirect(url_for('product', asin=search_term))
     else:
