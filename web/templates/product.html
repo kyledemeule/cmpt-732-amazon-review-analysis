@@ -9,8 +9,12 @@
         <dt>A Score</dt>
         <dd>{{ product.meth1_score }}</dd>
     </dl>
-    <div>Amazon Histogram</div>
-    <div>A-Score Histogram</div>
+    <div id="histograms">
+        <h3>Amazon Histogram</h3>
+        <div id="overall_histogram" style="width: 500px; height: 200px;"></div>
+        <h3>A-Score Histogram</h3>
+        <div id="weighted_histogram" style="width: 500px; height: 200px;"></div>
+    </div>
     </h3>Top Reviews</h3>
     <ul class=reviews>
         {% for review in reviews %}
@@ -18,4 +22,10 @@
             <dd>{{ review.reviewtext }}</dd>
         {% endfor %}
     </ul>
+    <script type="text/javascript">
+        var to_draw = [
+            ["overall_histogram", {{ product.overall_histogram }}],
+            ["weighted_histogram", {{ product.meth1_histogram }}],
+        ]
+    </script>
 {% endblock %}

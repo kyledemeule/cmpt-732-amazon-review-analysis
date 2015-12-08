@@ -1,7 +1,9 @@
 <!doctype html>
 <title>Amazon Reviews</title>
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <div class=page>
   <h1><a href="{{ url_for('index') }}">AmzDB</a></h1>
   {% block body %}{% endblock %}
 </div>
+<script type="text/javascript" src="{{ url_for('static', filename='app.js') }}"></script>
