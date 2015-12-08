@@ -11,11 +11,11 @@
     </dl>
     <div id="histograms">
         <h3>Amazon Histogram</h3>
-        <div id="overall_histogram" style="width: 500px; height: 200px;"></div>
+        <div id="overall_histogram"></div>
         <h3>A-Score Histogram</h3>
-        <div id="weighted_histogram" style="width: 500px; height: 200px;"></div>
+        <div id="weighted_histogram"></div>
     </div>
-    </h3>Top Reviews</h3>
+    <h3>Top Reviews</h3>
     <ul class=reviews>
         {% for review in reviews %}
             <dt><a href="{{ url_for('review', reviewer_id=review.reviewerid, asin=review.asin) }}">{{ review.summary }}</a></dt>

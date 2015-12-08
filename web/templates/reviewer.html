@@ -9,7 +9,10 @@
         <dt>A Score</dt>
         <dd>{{ reviewer.meth1_score }}</dd>
     </dl>
-    <div>Amazon Histogram</div>
+    <div id="histograms">
+        <h3>Amazon Histogram</h3>
+        <div id="overall_histogram"></div>
+    </div>
     <h3>Reviews</h3>
     <dl class=reviews>
         {% for review in reviews %}
@@ -17,4 +20,9 @@
             <dd>{{ review.reviewtext }}</dd>
         {% endfor %}
     </dl>
+    <script type="text/javascript">
+        var to_draw = [
+            ["overall_histogram", {{ reviewer.overall_histogram }}],
+        ]
+    </script>
 {% endblock %}
