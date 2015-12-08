@@ -15,8 +15,15 @@ def main():
                 count = int(pieces[2])
                 if count > min_count:
                     overalls.append(overall)
-     
-    pyplot.hist(overalls, num_bins)
+
+    if False:
+        pyplot.hist(overalls, num_bins)
+    else:
+        # buckets should be open except for last one, i.e. the first bucket is 1 <= val < 1.25
+        bins=[1, 1.25, 1.75, 2.25, 2.75, 3.25, 3.75, 4.25, 4.75, 5.25]
+        res = pyplot.hist(overalls, bins=bins)
+        print res
+
     pyplot.show()
 
 if __name__ == "__main__":
