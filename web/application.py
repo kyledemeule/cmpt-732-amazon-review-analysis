@@ -32,12 +32,16 @@ def product(asin):
 def reviewer(reviewer_id):
     page = int(request.args.get('page')) if type(request.args.get('page')) is unicode else 0
     reviewer = Model.get_reviewer(reviewer_id)
-    reviews = Model.get_reviews(reviewer=reviewer_id, page=page, length=REVIEW_PAGE_LENGTH)
+    if not reviewer:
+        abort(404)
+    reviews = Model.get_reviews(reviewer_id=reviewer_id, page=page, length=REVIEW_PAGE_LENGTH)
     return render_template('reviewer.html', reviewer=reviewer, reviews=reviews)
 
-@app.route('/review/<review_id>')
-def review(review_id):
-    review = Model.get_review(review_id)
+@app.route('/review/<reviewer_id>/<asin>')
+def review(reviewer_id, asin):
+    review = Model.get_review(reviewer_id, asin)
+    if not review:
+        abort(404)
     return render_template('review.html', review=review)
 
 if __name__ == "__main__":

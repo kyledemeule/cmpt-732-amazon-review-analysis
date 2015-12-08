@@ -10,17 +10,22 @@
       </dl>
     </form>
     <h2>Top Reviewers</h2>
-    <ul class=reviews>
+    <table class=reviews>
         {% for reviewer in top_reviewers %}
-            <a href="">title</a>
+            <tr>
+                <td><a href="{{ url_for('reviewer', reviewer_id=reviewer.reviewerid) }}">{{ reviewer.reviewername }}</a></td>
+                <td>{{ reviewer.meth1_score }}</td>
+            </tr>
         {% endfor %}
+    </table>
+    <ul class=reviews>
     </ul>
     <h2>Top Products</h2>
     <table class=products>
         {% for product in top_products %}
             <tr>
-                <td><a href=""></a></td>
-                <td>Score</td>
+                <td><a href="{{ url_for('product', asin=product.asin) }}">{{ product.asin }}</a></td>
+                <td>{{ product.meth1_score }}</td>
             </tr>
         {% endfor %}
     </table>

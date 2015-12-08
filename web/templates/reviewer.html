@@ -2,13 +2,19 @@
 {% block body %}
     <h2>Reviewer</h2>
     <dl>
-        <dt>Info</dt>
+        <dt>ReviewerId</dt>
+        <dd>{{ reviewer.reviewerid }}</dd>
+        <dt>Name</dt>
+        <dd>{{ reviewer.reviewername }}</dd>
+        <dt>A Score</dt>
+        <dd>{{ reviewer.meth1_score }}</dd>
     </dl>
     <div>Amazon Histogram</div>
-    </h3>Reviews</h3>
-    <ul class=reviews>
+    <h3>Reviews</h3>
+    <dl class=reviews>
         {% for review in reviews %}
-            review
+            <dt><a href="{{ url_for('review', reviewer_id=review.reviewerid, asin=review.asin) }}">{{ review.summary }}</a></dt>
+            <dd>{{ review.reviewtext }}</dd>
         {% endfor %}
-    </ul>
+    </dl>
 {% endblock %}
