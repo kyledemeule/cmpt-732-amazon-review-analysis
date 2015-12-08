@@ -2,7 +2,12 @@
 {% block body %}
     <h2>Product</h2>
     <dl>
-        <dt>Info</dt>
+        <dt>ASIN</dt>
+        <dd>{{ product.asin }}</dd>
+        <dt>Overall Score</dt>
+        <dd>{{ product.overall_score }}</dd>
+        <dt>A Score</dt>
+        <dd>{{ product.meth1_score }}</dd>
     </dl>
     <div>Amazon Histogram</div>
     <div>A-Score Histogram</div>

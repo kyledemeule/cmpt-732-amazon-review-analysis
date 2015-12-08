@@ -23,6 +23,8 @@ def search():
 @app.route('/product/<asin>')
 def product(asin):
     product = Model.get_product(asin)
+    if not product:
+        abort(404)
     reviews = Model.get_top_reviews(asin, length=REVIEW_PAGE_LENGTH)
     return render_template('product.html', product=product, reviews=reviews)
 
