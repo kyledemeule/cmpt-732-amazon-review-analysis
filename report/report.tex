@@ -1,7 +1,11 @@
-\documentclass[a4paper,11pt]{article}
+\documentclass[a4paper,10pt]{article}
 \usepackage{graphicx}
 \usepackage{csquotes}
 \usepackage{hyperref}
+\usepackage{multicol}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
 \usepackage[a4paper,left=1.5cm,right=1.5cm,top=2cm,bottom=2cm]{geometry}
 \graphicspath{ {figures/} }
 \begin{document}
@@ -64,7 +68,7 @@ What we see here is around \textbf{53\%} of products with over five reviews will
 \section*{Helpfulness}
 Amazon allows users to mark whether they found a review helpful or not, giving each review a helpfulness score. This score is used to pick between 1 and 8 reviews to highlight and be shown on a products page. I wondered how the distribution of reviews Amazon chose to show on a products main page compared to the total reviews for the product. Unfortunately this data was not in my origin dataset, so I had to do some additional processing. I picked 2000 items at random, and retrieved the reviews Amazon displayed for them. I also retrieved each products overall count of reviews for each star rating. I compare the distribution of shown helpful reviews and total reviews here:
 \begin{center}
-    \includegraphics[scale=0.5]{helpfulness.png}
+    \includegraphics[scale=0.3]{helpfulness.png}
 \end{center}
 As we can see, they are essentially the same. This can be taken as a good thing or a bad thing. The good aspect is that the \enquote{helpful} reviews don't inflate the perception of all the reviews for the product, they are fair representation of the rest of the reviews. The bad part is they dont inflate the reviews because the reviews were already inflated. If you randomly sampled reviews you'd see the same thing. And according to previous research, that's essentially what you're doing. In 2009, Bing Liu from the University of Illinois did a study on spam in Amazon reviews. He developed a model that could predict spam to an 80\% accuracy. He analyzed the spammy-ness of reviews with high helpfulness scores to reviews with low helpfulness scores and found \textbf{no difference}. And this makes sense, how easy is it to mark a review as heplful? How easy would it be to game that system? (not to mention how reviews with a high number of helpful points are more visible and thus more likely to get more helpful votes)
 
@@ -76,7 +80,7 @@ My original instinct was that this must be caused by spam. Fraudulent reviews to
 Imagine you have a product with four reviews, and you want to see which one you trust the most. You might want to look at the history of each of the reviewers. If each one of these was one of the reviewers, who would you trust?
 
 \begin{center}
-    \includegraphics[scale=0.5]{helpfulness.png}
+    \includegraphics[scale=0.2]{helpfulness.png}
 \end{center}
 
 Probably not the first or last one, they seem extremely biased. Maybe the second one, but the third one seems most interesting. If you're reading a 1 or 5 star review from that user, you know they mean it. And if they give a 3 star review, you're probably looking at an average product.
@@ -99,7 +103,20 @@ We can see a bit of a drift towards the left, which was the goal. There's a sign
 
 Most products stayed about the same, but there's a good chunk that decreased in the -1.0 to -0.25 range, and some that even increased 1 full star. This is enough of a difference to break things down by category and brand, and see what areas benefit the most from Amazon's current biased review scores:
 
-category breakdown
+\begin{figure}[H]
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=1\linewidth]{change_by_category_neg.png}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=1\linewidth]{change_by_category_pos.png}
+  \label{fig:sub2}
+\end{subfigure}
+\label{fig:test}
+\end{figure}
 
 explaination
 
