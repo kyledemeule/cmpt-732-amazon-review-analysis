@@ -118,11 +118,26 @@ Most products stayed about the same, but there's a good chunk that decreased in 
 \label{fig:test}
 \end{figure}
 
-explaination
+Only categories with at least 500 products were included in the results. The average of the difference when using the weighted scores was taken for all the products in that category. The left graph shows the 10 categories that decreased the most, and the right graph shows the categories that increased the most.
 
-brand breakdown
+\begin{figure}[H]
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=1\linewidth]{change_by_brand_neg.png}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=1\linewidth]{change_by_brand_pos.png}
+  \label{fig:sub2}
+\end{subfigure}
+\label{fig:test}
+\end{figure}
 
-explaination
+Now we're digging into some of the murky waters of the depths of Amazon. What is Wea2? Searching Amazon for the term didn't reveal much. I looked at a some of the items in the dataset that had their brand as Wea2 and they were entirely music CDs. Same for the MUSIC brand. Likely this was the handle for a music distributor and many CDs got put as their brand. Something similar could be said for Warner, Universal, Lions Gate, Buena Vista(Disney), all film distribution companies that likely had many films listed under their brand. A trend here then is that multi-media like music in video has more reviews from habitually negative reviewers. Some of the more recognizable companies that are underrated are Futuro (3M subsidiary), Audio-Technica (headphones), and Enzymatic (probiotics). 
+
+And now our worst offenders. Top of the negative list is Brainydeal, SIB-CORP, and BetterStuff LowerPrice, all of whom are low end manufacturers of cheap electronic goods. This analysis shows that it's quite likely that their products are being propped up by overly positive reviews, and should be avoided. V4INK carries print supplies, and is probably why the printer category showed up in earlier analysis. The only company from this list I had heard of before was Verizon; looking at the items they carry from the dataset it was mostly cell phone accessories like holsters and chargers. Ther overall trend here is that cheap electronics on Amazon likely have extra inflated scores relative to the rest of products.
 
 \section*{Usage}
 How is this available?
