@@ -7,12 +7,12 @@ def process_review(row):
   result = {}
   result["reviewerid"] = row.reviewerID
   result["asin"] = row.asin
-  result["reviewerName"] = row.reviewerName
-  result["reviewText"] = row.reviewText
+  result["reviewername"] = row.reviewerName
+  result["reviewtext"] = row.reviewText
   result["overall"] = row.overall
   result["summary"] = row.summary
-  result["unixReviewTime"] = row.unixReviewTime
-  result["reviewTime"] = row.reviewTime
+  result["unixreviewtime"] = row.unixReviewTime
+  result["reviewtime"] = row.reviewTime
   result["helpful_pos"] = row.helpful_positive
   result["helpful_total"] = row.helpful_total
   return result
@@ -24,7 +24,7 @@ def fillin_review(json, score):
 def process_reviewer(row):
   result = {}
   result["reviewerid"] = row.reviewerID
-  result["reviewerName"] = row.reviewerName
+  result["reviewername"] = row.reviewerName
   return result
 
 def fillin_reviewer(json, score, histo):
