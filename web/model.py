@@ -1,6 +1,5 @@
 from cassandra.cluster import Cluster
-
-# SANITIZE YOUR DATA
+import re
 
 class Model:
     default_length = 10
@@ -30,27 +29,38 @@ class Model:
         return list(res)
 
     @staticmethod
+    def clean_params(*args):
+        return map(re.escape, args)
+
+    @staticmethod
     def get_product(asin):
+        [asin] = Model.clean_params(asin)
         query = "SELECT * FROM products WHERE asin = '%s' LIMIT 1" % (asin)
         return Model.get_one(query)
 
     @staticmethod
     def get_reviewer(reviewer_id):
+        [reviewer_id] = Model.clean_params(reviewer_id)
         query = "SELECT * FROM reviewers WHERE reviewerid = '%s' LIMIT 1" % (reviewer_id)
         return Model.get_one(query)
 
     @staticmethod
     def get_review(reviewer_id, asin):
+        [reviewer_id, asin] = Model.clean_params(reviewer_id, asin)
         query = "SELECT * FROM reviews WHERE reviewerid = '%s' AND asin = '%s' LIMIT 1" % (reviewer_id, asin)
         return Model.get_one(query)
 
     @staticmethod
-    def get_reviews(reviewer_id, page=0, length=default_length):
+    def get_reviews(reviewer_id, length=default_length):
+        length = int(length)
+        [reviewer_id] = Model.clean_params(reviewer_id)
         query = "SELECT * FROM reviews WHERE reviewerid = '%s' LIMIT %i" % (reviewer_id, length)
         return Model.get_list(query)
 
     @staticmethod
     def get_top_reviews(asin, length=default_length):
+        length = int(length)
+        [asin] = Model.clean_params(asin)
         # already ordered by score
         query = "SELECT * FROM reviews WHERE asin = '%s' LIMIT %i" % (asin, length)
         return Model.get_list(query)
