@@ -49,3 +49,7 @@ python application.py
 ```
 
 See ```CASSANDRA.md``` for info on cassandra.
+
+```
+${SPARK_HOME}/bin/spark-submit --packages TargetHolding:pyspark-cassandra:0.2.1 cassandra_upload.py ~/bigdata/shared/parquet/subset/ ~/bigdata/shared/parquet/metadata/ results/too_big/meth2_users_ascores results/too_big/meth2_product_ascores
+```
