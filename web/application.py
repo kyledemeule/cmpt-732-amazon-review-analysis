@@ -6,9 +6,7 @@ REVIEW_PAGE_LENGTH = 10
 
 @app.route("/")
 def index():
-    top_reviewers = Model.get_top_reviewers(length=REVIEW_PAGE_LENGTH)
-    top_products = Model.get_top_products(length=REVIEW_PAGE_LENGTH)
-    return render_template('index.html', top_reviewers=top_reviewers, top_products=top_products)
+    return render_template('index.html')
 
 @app.route("/search")
 def search():
@@ -30,11 +28,10 @@ def product(asin):
 
 @app.route('/reviewer/<reviewer_id>')
 def reviewer(reviewer_id):
-    page = int(request.args.get('page')) if type(request.args.get('page')) is unicode else 0
     reviewer = Model.get_reviewer(reviewer_id)
     if not reviewer:
         abort(404)
-    reviews = Model.get_reviews(reviewer_id=reviewer_id, page=page, length=REVIEW_PAGE_LENGTH)
+    reviews = Model.get_reviews(reviewer_id=reviewer_id, length=REVIEW_PAGE_LENGTH)
     return render_template('reviewer.html', reviewer=reviewer, reviews=reviews)
 
 @app.route('/review/<reviewer_id>/<asin>')

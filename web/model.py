@@ -50,16 +50,7 @@ class Model:
         return Model.get_list(query)
 
     @staticmethod
-    def get_top_reviewers(length=default_length):
-        query = "SELECT * FROM reviewers LIMIT %i" % (length)
-        return Model.get_list(query)
-
-    @staticmethod
-    def get_top_products(length=default_length):
-        query = "SELECT * FROM products LIMIT %i" % (length)
-        return Model.get_list(query)
-
-    @staticmethod
     def get_top_reviews(asin, length=default_length):
+        # already ordered by score
         query = "SELECT * FROM reviews WHERE asin = '%s' LIMIT %i" % (asin, length)
         return Model.get_list(query)

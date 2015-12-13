@@ -30,7 +30,7 @@ CREATE TABLE reviews (
     reviewtime varchar,
     meth2_score float,
     PRIMARY KEY ((asin), meth2_score)
-);
+) WITH CLUSTERING ORDER BY (meth2_score DESC);
 
 CREATE INDEX reviews_reviewerid_index ON reviews (reviewerid);
 

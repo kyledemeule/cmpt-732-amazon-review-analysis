@@ -1,8 +1,12 @@
 {% extends "layout.html" %}
 {% block body %}
+    <div>
+        For <a href="{{ url_for('product', asin=review.asin) }}">{{ review.asin }}</a>
+    </div>
     <h2>Review</h2>
     <dl class=reviews>
         <dt><a href="{{ url_for('review', reviewer_id=review.reviewerid, asin=review.asin) }}">{{ review.summary }}</a></dt>
         <dd>{{ review.reviewtext }}</dd>
+        <dd>By <a href="{{ url_for('reviewer', reviewer_id=review.reviewerid) }}">{{ review.reviewername }}</a></dd>
     </dl>
 {% endblock %}
