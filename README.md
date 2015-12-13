@@ -48,29 +48,4 @@ The web front end is a flask application that connects to a Cassandra cluster. Y
 python application.py
 ```
 
-## Cassandra
-
-Start cassandra:
-```
-sudo ${CASSANDRA_HOME}/bin/cassandra
-```
-
-Cassandra shell:
-```
-${CASSANDRA_HOME}/bin/cqlsh
-```
-
-FYI cassandra run at ```127.0.0.1:9042``` by default.
-
-For spark jobs that use cassandra:
-
-```
-spark-submit --packages TargetHolding:pyspark-cassandra:0.2.1 --conf spark.cassandra.connection.host=127.0.0.1:9042
-```
-
-You were about to run:
-```
-${SPARK_HOME}/bin/spark-submit --packages TargetHolding:pyspark-cassandra:0.2.1 cassandra.py data/subset.json
-```
-
-${SPARK_HOME}/bin/pyspark --packages TargetHolding:pyspark-cassandra:0.2.1 --conf spark.cassandra.connection.host=127.0.0.1:9042
+See ```CASSANDRA.md``` for info on cassandra.
