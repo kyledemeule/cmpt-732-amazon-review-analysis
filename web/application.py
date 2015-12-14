@@ -4,11 +4,11 @@ application = Flask(__name__)
 
 REVIEW_PAGE_LENGTH = 10
 
-@app.route("/")
+@application.route("/")
 def index():
     return render_template('index.html')
 
-@app.route("/search")
+@application.route("/search")
 def search():
     search_type = request.args.get('search_type').strip()
     search_term = request.args.get('search_term').strip()
@@ -18,7 +18,7 @@ def search():
         # include a message
         redirect(url_for('index'))
 
-@app.route('/product/<asin>')
+@application.route('/product/<asin>')
 def product(asin):
     product = Model.get_product(asin)
     if not product:
@@ -26,7 +26,7 @@ def product(asin):
     reviews = Model.get_top_reviews(asin, length=REVIEW_PAGE_LENGTH)
     return render_template('product.html', product=product, reviews=reviews)
 
-@app.route('/reviewer/<reviewer_id>')
+@application.route('/reviewer/<reviewer_id>')
 def reviewer(reviewer_id):
     reviewer = Model.get_reviewer(reviewer_id)
     if not reviewer:
@@ -34,7 +34,7 @@ def reviewer(reviewer_id):
     reviews = Model.get_reviews(reviewer_id=reviewer_id, length=REVIEW_PAGE_LENGTH)
     return render_template('reviewer.html', reviewer=reviewer, reviews=reviews)
 
-@app.route('/review/<reviewer_id>/<asin>')
+@application.route('/review/<reviewer_id>/<asin>')
 def review(reviewer_id, asin):
     review = Model.get_review(reviewer_id, asin)
     if not review:
@@ -42,4 +42,4 @@ def review(reviewer_id, asin):
     return render_template('review.html', review=review)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    application.run(debug=True)
