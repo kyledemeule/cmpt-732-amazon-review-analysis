@@ -39,7 +39,6 @@ CREATE TABLE reviewers (
     reviewername varchar,
     overall_histogram map<int, int>,
     meth2_score float,
-    meth2_histogram map<int, int>,
     PRIMARY KEY (reviewerid)
 );
 
@@ -55,11 +54,12 @@ CREATE TABLE products (
     meth2_histogram map<int, int>,
     PRIMARY KEY (asin)
 );
+
 ```
 
 ## Spark Jobs
 
 Running spark jobs that interact with Cassandra:
 ```
-${SPARK_HOME}/bin/spark-submit --packages TargetHolding:pyspark-cassandra:0.2.1 cassandra.py data/subset.json
+${SPARK_HOME}/bin/spark-submit --packages TargetHolding:pyspark-cassandra:0.2.1 cassandra_upload.py ~/bigdata/shared/parquet/subset/ results/too_big/meth2_users_ascores results/too_big/meth2_product_ascores
 ```

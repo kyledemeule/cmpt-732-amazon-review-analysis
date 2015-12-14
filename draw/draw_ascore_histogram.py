@@ -29,7 +29,7 @@ def main():
         # buckets should be open except for last one, i.e. the first bucket is 1 <= val < 1.25
         bins=[1, 1.25, 1.75, 2.25, 2.75, 3.25, 3.75, 4.25, 4.75, 5.25]
         pyplot.hist(overall_normal, bins=bins, alpha=0.5, color="black", label="Normal")
-        pyplot.hist(overall_weighted, bins=bins, alpha=0.5, color="green", label="Normal Weighted")
+        pyplot.hist(overall_weighted, bins=bins, alpha=0.5, color="green", label="Weighted")
         pyplot.ylabel('Count')
         pyplot.xlabel('Product Averages (products with > 5 reviews)')
         pyplot.legend(prop={'size': 10}, loc=2)

@@ -58,9 +58,10 @@ def main():
     aggregate_user_review_counts = user_review_counts.reduceByKey(combine_counts)
     #(u'A019669721M1JHRC4WWW3', {1: 0, 2: 0, 3: 0, 4: 4, 5: 1})
     # calculate user balanced rating
-    user_ascores = aggregate_user_review_counts.map(lambda (u_id, scores): (u_id, calculate_ascore(scores)))
+    user_ascores = aggregate_user_review_counts.map(lambda (u_id, scores): (u_id, calculate_ascore(scores), scores)).cache()
     # save user balance rating
-    user_ascores.map(lambda a: u"%s, %F" % a).repartition(1).saveAsTextFile(output + "ascores/")
+    user_ascores.repartition(1).saveAsTextFile(output + "ascores/")
+    user_ascores = user_ascores.map(lambda (u_id, score, scores): (u_id, score))
 
     # join reviews to user balance rating
     all_reviews = sqlContext.sql("""
