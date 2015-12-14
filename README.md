@@ -11,6 +11,9 @@ The project directory breakdown is like this:
 - The ```CASSANDRA.md``` has information on cassandra as well as the structure of the database
 - Some utility/help files are in ```utils/```
 
+## Web Front-End
+A web front end **should** be running at http://732.cmplx.ca. This version just has dummy data to demonstrate the bare basics. If it throws a server error it's likely Cassandra stopped running, as of writing this I don't have it configured the best way. I'm also trying to get the full dataset version up and running, but as of writing this it's still processing. If that works out it will be at https://kyle732.localtunnel.me.
+
 ## Dataset
 
 The dataset is relatively large (~23GB) and can't be included in git. It was attained from http://jmcauley.ucsd.edu/data/amazon/. None of those download links work, you must request access from the author.
