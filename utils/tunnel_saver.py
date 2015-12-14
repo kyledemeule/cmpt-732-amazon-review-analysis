@@ -1,4 +1,4 @@
-import requests, sys, subprocess
+import requests, sys, subprocess, time
 
 def make_url(subdomain):
     return "http://%s.localtunnel.me/" % (subdomain)
@@ -12,7 +12,7 @@ def main():
             p = subprocess.Popen(["lt", "--port", port, "--subdomain", subdomain])
             print p.pid
 
-        sleep(30)
+        time.sleep(30)
 
 
 if __name__ == "__main__":
