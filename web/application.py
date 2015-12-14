@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, abort
 from model import Model
-app = Flask(__name__)
+application = Flask(__name__)
 
 REVIEW_PAGE_LENGTH = 10
 
