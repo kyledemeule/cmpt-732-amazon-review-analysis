@@ -1,19 +1,27 @@
 {% extends "layout.html" %}
 {% block body %}
-    <h2>Product</h2>
+    <h2>{{ product.title or "Product" }}</h2>
     <dl>
         <dt>ASIN</dt>
         <dd>{{ product.asin }}</dd>
         <dt>Overall Score</dt>
         <dd>{{ product.overall_score }}</dd>
-        <dt>A Score</dt>
+        <dt>Alternative Score</dt>
         <dd>{{ product.meth2_score }}</dd>
     </dl>
     <div id="histograms">
-        <h3>Amazon Histogram</h3>
-        <div id="overall_histogram"></div>
-        <h3>A-Score Histogram</h3>
-        <div id="weighted_histogram"></div>
+        <table>
+        <tr>
+            <td id="overall_container">
+                <h3>Amazon Histogram</h3>
+                <div id="overall_histogram"></div>
+            </td>
+            <td id="weighted_container">
+                <h3>A-Score Histogram</h3>
+                <div id="weighted_histogram"></div>
+            </td>
+        </tr>
+        </table>
     </div>
     <h3>Top Reviews</h3>
     <ul class=reviews>

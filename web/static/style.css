@@ -8,3 +8,10 @@ div#weighted_histogram {
     height: 200px;
     /*margin-left: 400px;*/
 }
+div#product_info {
+    float: left;
+}
+
+body {
+    padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+}
