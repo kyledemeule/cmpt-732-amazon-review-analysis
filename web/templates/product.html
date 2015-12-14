@@ -28,6 +28,7 @@
         {% for review in reviews %}
             <dt><a href="{{ url_for('review', reviewer_id=review.reviewerid, asin=review.asin) }}">{{ review.summary }}</a></dt>
             <dd>{{ review.reviewtext }}</dd>
+            <dd>{{ review.overall }} out of 5.0</dd>
             <dd>By <a href="{{ url_for('reviewer', reviewer_id=review.reviewerid) }}">{{ review.reviewername }}</a></dd>
         {% endfor %}
     </ul>
